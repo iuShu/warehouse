@@ -11,7 +11,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+      <body className={"none " + inter.className} suppressHydrationWarning={true}>
+        {children}
+      </body>
     </html>
   )
 }

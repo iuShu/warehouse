@@ -3,21 +3,25 @@ import {NextResponse} from "next/server";
 const ipCounter = {}
 
 export function middleware(req) {
-  ratelimit(req)
+  // ratelimit(req)
 
   const pathname = req.nextUrl.pathname
   const token = req.cookies.get(process.env.COOKIE_KEY)?.value
   console.log(process.env.COOKIE_KEY, token)
   if (!token || token !== 'WH_FAKE_TOKEN_abc123') {
-    if (!pathname.startsWith('/login'))
-      return NextResponse.redirect(new URL("/login", req.url))
+    if (!pathname.startsWith('/auth'))
+      return NextResponse.redirect(new URL("/auth", req.url))
   }
-  else if (pathname === '/' || pathname === '/login')
+  else if (pathname === '/' || pathname === '/auth' || is_login_req(req))
      return NextResponse.redirect(new URL("/admin", req.url))
 }
 
 export const config = {
-  matcher: ["/", "/login/:path*", "/admin/:path*"]
+  matcher: ["/", "/auth/:path*", "/admin/:path*"]
+}
+
+const is_login_req = (req) => {
+  return req.method === 'POST' && req.nextUrl.pathname === '/auth/api'
 }
 
 const ratelimit = (req) => {

@@ -10,7 +10,7 @@ export async function POST(req) {
     name: process.env.COOKIE_KEY,
     value: "WH_FAKE_TOKEN_abc123",
     path: "/",
-    maxAge: 10
+    maxAge: parseInt(process.env.COOKIE_MAX_AGE)
   })
   return res
 }

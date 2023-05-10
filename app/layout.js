@@ -1,8 +1,9 @@
 import './globals.css'
-import { Inter } from 'next/font/google'
+import { Inter, Roboto } from 'next/font/google'
 import {ThemeProvider} from "../providers/theme";
 
 const inter = Inter({ subsets: ['latin'] })
+const roboto = Roboto({ weight: '100', subsets: ['latin'] })
 
 export const metadata = {
   title: 'Create Next App',
@@ -13,7 +14,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-      <body className={"none " + inter.className} suppressHydrationWarning={true}>
+      <body className={"none " + roboto.className} suppressHydrationWarning={true}>
         <ThemeProvider>
           {children}
         </ThemeProvider>

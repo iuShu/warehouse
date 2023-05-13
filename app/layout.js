@@ -1,9 +1,9 @@
 import './globals.css'
-import { Inter, Roboto } from 'next/font/google'
+import { Inter, Roboto, Open_Sans } from 'next/font/google'
 import {ThemeProvider} from "../providers/theme";
 
 const inter = Inter({ subsets: ['latin'] })
-const roboto = Roboto({ weight: '100', subsets: ['latin'] })
+const roboto = Roboto({ weight: '300', subsets: ['latin'] })
 
 export const metadata = {
   title: 'Create Next App',

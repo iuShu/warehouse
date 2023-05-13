@@ -9,11 +9,15 @@ export function middleware(req) {
   const token = req.cookies.get(process.env.COOKIE_KEY)?.value
   console.log(process.env.COOKIE_KEY, token)
   if (!token || token !== 'WH_FAKE_TOKEN_abc123') {
-    if (!pathname.startsWith('/auth'))
+    if (!pathname.startsWith('/auth')) {
+      console.log('to auth')
       return NextResponse.redirect(new URL("/auth", req.url))
+    }
   }
-  else if (pathname === '/' || pathname === '/auth' || is_login_req(req))
-     return NextResponse.redirect(new URL("/admin", req.url))
+  else if (pathname === '/' || pathname === '/auth' || is_login_req(req)) {
+    console.log('to admin')
+    return NextResponse.redirect(new URL("/admin", req.url))
+  }
 }
 
 export const config = {

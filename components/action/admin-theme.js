@@ -2,21 +2,16 @@
 
 import {ThemeContext} from "../../providers/theme";
 import {useContext} from "react";
-import Link from "next/link";
 
 export function AdminTheme() {
   const themeContext = useContext(ThemeContext)
   const switchTheme = () => {
-    // document.querySelector('#theme_icon').click()
     themeContext.switch()
   }
-
-  console.log(themeContext.theme)
-
   return (
     <>
-      <Link href={""} onClick={switchTheme}
-            className="w-full h-10 flex flex-row gap-2 px-4 items-center justify-start rounded-r-full text-zinc-800 dark:text-slate-400 hover:bg-zinc-300 hover:text-slate-700 hover:dark:bg-zinc-700 hover:dark:text-slate-300"
+      <button onClick={switchTheme}
+            className="w-full h-10 flex flex-row gap-2 px-4 items-center justify-start rounded-r-full tracking-widest text-zinc-800 dark:text-slate-400 hover:bg-zinc-200 hover:text-slate-700 hover:dark:bg-zinc-700 hover:dark:text-slate-300"
       >
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5"
              stroke="currentColor" className={"w-6 h-6 text-orange-300 " + (themeContext.theme === "dark" ? "" : "hidden")}>
@@ -27,7 +22,7 @@ export function AdminTheme() {
           <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/>
         </svg>
         <span>主题</span>
-      </Link>
+      </button>
     </>
   )
 }

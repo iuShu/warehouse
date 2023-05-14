@@ -4,7 +4,8 @@ import {useRef, useState} from "react";
 
 const selectedRows = new Set()
 
-export function Table({ headers, rows, pages = null, pageCallback = null }) {
+export function Table({ name, headers, rows, pages = null, pageCallback = null,
+                        toolbar = true, styles = {} }) {
   const rowRefs = useRef([])
   const onClickRow = (r) => {
     const ele = rowRefs.current[r]
@@ -41,35 +42,35 @@ export function Table({ headers, rows, pages = null, pageCallback = null }) {
   const pageNos = Array.from({ length: pages.totalPage }, (v, i) => i + 1);
   return (
     <>
-      <div className="h-full flex flex-col gap-1">
-        <div className="h-[485px] relative">
-          <table className="table-fixed w-full">
+      <div className="h-full flex flex-col gap-1 pb-2">
+        <div className={"relative overflow-y-auto " + (styles.height || "")}>
+          <table className={"w-full " + (styles.layout || "table-auto")}>
             <thead className="text-left tracking-widest select-none hover:bg-violet-50/50">
             <tr>
-              <th key={"select-all"}
-                  className="w-12 pt-5 pb-2 text-center border-b dark:border-zinc-500">
+              <th key={name + "-select-all"}
+                  className="w-12 pt-4 text-center border-b dark:border-zinc-500">
                 <div onClick={onSelectAll} className={pages.totalRow < 1 ? "hidden" : ""}>
                   <Checkbox />
                 </div>
               </th>
-              {headers.map(each => {
+              {headers.map((each, i) => {
                 return (
-                  <th key={each} className="px-2 pt-4 pb-2 border-b dark:border-zinc-500">
+                  <th key={name + "-th-" + i} className="px-2 pt-4 border-b dark:border-zinc-500">
                     {each}
                   </th>
                 )
               })}
             </tr>
             </thead>
-            <tbody className="textLeft text-slate-600">
+            <tbody className="text-left text-slate-600">
             {rows.map((row, r) => {
               const rid = row[0]
               return (
-                <tr key={'tr-' + rid} id={rid} ref={rf => rowRefs.current[r] = rf} onClick={() => onClickRow(r)}
-                    className="border-b cursor-pointer hover:bg-gray-50 hover:shadow-lg">
+                <tr key={name + "-tr-" + rid} id={rid} ref={rf => rowRefs.current[r] = rf} onClick={() => onClickRow(r)}
+                    className="border-b cursor-pointer hover:bg-gray-50">
                   {row.map((col, i) => {
                     return (
-                      <td key={'td-' + col} className={"px-2 py-1/2 text-" + (i === 0 ? "center" : "left")}>
+                      <td key={name + "-td-" + col} className={"px-2 py-2 truncate " + (i === 0 ? "text-center" : "")}>
                         {i === 0 ? <Checkbox /> : col}
                       </td>
                     )
@@ -88,12 +89,12 @@ export function Table({ headers, rows, pages = null, pageCallback = null }) {
             </div>
           </div>
         </div>
-        <div className="flex flex-row ">
-          <div className="basis-3/5 flex flex-row gap-1 text-violet-600 items-center">
-            <button className="h-8 px-2 rounded hover:bg-violet-100 tracking-widest">新增</button>
-            <button className="h-8 px-2 rounded hover:bg-violet-100 tracking-widest">删除</button>
+        <div className={"flex flex-row " + (toolbar ? "" : "hidden")}>
+          <div className="basis-2/5 flex flex-row gap-1 text-violet-600 items-center">
+            <button className="h-8 px-2 rounded hover:bg-violet-100 active:bg-violet-200 tracking-widest">新增</button>
+            <button className="h-8 px-2 rounded hover:bg-violet-100 active:bg-violet-200 tracking-widest">删除</button>
           </div>
-          <div className="basis-2/5 flex flex-row items-center justify-end gap-2 font-semibold">
+          <div className="basis-3/5 flex flex-row items-center justify-end font-semibold">
             <div className="font-semibold hidden">Page Size</div>
             <select className="w-18 px-2 py-1 cursor-pointer rounded font-semibold bg-zinc-100 hover:bg-zinc-200 hidden">
               <option value="10">10</option>
@@ -104,10 +105,10 @@ export function Table({ headers, rows, pages = null, pageCallback = null }) {
               <option value="50">50</option>
               <option value="100">100</option>
             </select>
-            <div className="px-2 pt-1 select-none">
-              total <span>{pages.totalRow}</span>
+            <div className="px-2 pt-1 select-none text-slate-500">
+              共 <span>{pages.totalRow}</span> 条
             </div>
-            <div className="flex flex-row gap-2 text-slate-500">
+            <div className="flex flex-row gap-1 text-slate-500">
               <div onClick={() => pageCallback(pages.pageNo - 1)}
                    className={"px-2 py-2 rounded-full " + (pages.pageNo === 1 ? "text-slate-300" : "cursor-pointer hover:bg-zinc-200")}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
@@ -142,7 +143,7 @@ function Checkbox() {
   return (
     <>
       <button onClick={onCheck}
-              className={"relative w-5 h-5 rounded transition duration-300 " + (click ? "bg-green-600 active" : "bg-gray-200 dark:bg-zinc-700")}>
+              className={"relative w-5 h-5 rounded transition duration-300 " + (click ? "bg-violet-500 active" : "bg-gray-200 dark:bg-zinc-700")}>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"
              className={"w-4 h-4 pl-1 " + (click ? "text-slate-50" : "opacity-0")}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5"/>

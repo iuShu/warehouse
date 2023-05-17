@@ -27,7 +27,7 @@ export function Logout() {
   return (
     <>
       <button onClick={logout}
-            className="w-full h-10 flex flex-row gap-2 px-4 items-center justify-start rounded-r-full tracking-widest text-zinc-800 dark:text-slate-400 hover:bg-red-500 hover:text-slate-200 hover:dark:text-slate-200"
+              className="w-full h-10 flex flex-row gap-2 px-4 items-center justify-start rounded-r-full tracking-widest text-zinc-800 dark:text-slate-400 hover:bg-red-500 hover:text-slate-200 hover:dark:text-slate-200 transition duration-300"
       >
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"
              className="w-6 h-6">

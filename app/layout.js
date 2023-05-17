@@ -1,9 +1,10 @@
 import './globals.css'
-import { Inter, Roboto, Open_Sans } from 'next/font/google'
+import { Inter, Roboto, Source_Serif_Pro } from 'next/font/google'
 import {ThemeProvider} from "../providers/theme";
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ weight: '300', subsets: ['latin'] })
 const roboto = Roboto({ weight: '300', subsets: ['latin'] })
+const serif4 = Source_Serif_Pro({ weight: '300', subsets: ['latin'] })
 
 export const metadata = {
   title: 'Create Next App',
@@ -14,7 +15,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-      <body className={"none " + roboto.className} suppressHydrationWarning={true}>
+      <body className={inter.className} suppressHydrationWarning={true}>
         <ThemeProvider>
           {children}
         </ThemeProvider>

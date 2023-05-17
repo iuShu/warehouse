@@ -32,7 +32,7 @@ export default function Login() {
         <div className="flex flex-col w-1/2 mt-4 text-center">
           <LoginSubmit />
         </div>
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center hidden">
           <div>
             还没有账号？<Link href={"/auth/register"} className="text-blue-400 hover:text-blue-500 dark:text-indigo-400 hover:dark:text-indigo-500">注 册</Link>
           </div>

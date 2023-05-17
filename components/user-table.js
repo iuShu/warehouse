@@ -3,13 +3,15 @@
 import {Table} from "./table";
 import {useEffect, useState} from "react";
 
+const pageSize = 10
+
 export function UserTable() {
-  const headers = ['账号', '名称', '部门', '角色', '创建时间']
+  const headers = ['账号', '密码', '邮箱']
   const [rowData, setRowData] = useState(Array)
   const [pages, setPages] = useState({})
 
   useEffect(() => {
-    const {rows, page} = fetchPage(1, 10)
+    const {rows, page} = fetchPage(1, pageSize)
     setPages(page)
     setRowData(rows)
   }, [])
@@ -24,29 +26,35 @@ export function UserTable() {
     setRowData(rows)
   }
 
+  const styles = {
+    layout: 'table-fixed',
+    height: `h-[455px]`
+  }
+
   return (
     <>
-      <Table headers={headers} rows={rowData} pages={pages} pageCallback={flip} />
+      <Table name="user" headers={headers} rows={rowData} pages={pages} pageCallback={flip} styles={styles} />
     </>
   )
 }
 
+let fakeId = 1
 function fetchPage(pageNo, pageSize) {
   const raw = [
-    [1, 'account', 'abc', '财务部', '管理员', '2023-02-12 18:29:02'],
-    [2, 'account', 'abc', '财务部', '管理员', '2023-02-12 18:29:02'],
-    [3, 'account', 'abc', '总裁部', '员工', '2023-02-12 18:29:02'],
-    [4, 'account', 'abc', '财务部', '员工', '2023-02-12 18:29:02'],
-    [5, 'account', 'abc', '研发部', '员工', '2023-02-12 18:29:02'],
-    [6, 'account', 'abc', '人力部', '经理', '2023-02-12 18:29:02'],
-    [7, 'account', 'abc', '人力部', '经理', '2023-02-12 18:29:02'],
-    [8, 'account', 'abc', '人力部', '经理', '2023-02-12 18:29:02'],
-    [9, 'account', 'abc', '人力部', '经理', '2023-02-12 18:29:02'],
-    [10, 'account', 'abc', '人力部', '经理', '2023-02-12 18:29:02']
+    ['account1', 'account1', 'user@password', 'user@mail.com'],
+    ['account2', 'account2', 'user@password', 'user@mail.com'],
+    ['account3', 'account3', 'user@password', 'user@mail.com'],
+    ['account4', 'account4', 'user@password', 'user@mail.com'],
+    ['account5', 'account5', 'user@password', 'user@mail.com'],
+    ['account6', 'account6', 'user@password', 'user@mail.com'],
+    ['account7', 'account7', 'user@password', 'user@mail.com'],
+    ['account8', 'account8', 'user@password', 'user@mail.com'],
+    ['account9', 'account9', 'user@password', 'user@mail.com'],
+    ['account10', 'account10', 'user@password', 'user@mail.com']
   ]
   raw.map((row, i) => {
-    row[0] = pageSize * (pageNo - 1) + i + 1
-    row[1] += row[0]
+    row[0] = "account" + fakeId++
+    row[1] = row[0]
   })
   if (pageNo === 7)
     raw.pop()

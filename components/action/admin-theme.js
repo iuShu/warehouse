@@ -1,10 +1,9 @@
 'use client';
 
-import {ThemeContext} from "../../providers/theme";
-import {useContext} from "react";
+import {useThemeContext} from "../../providers/theme";
 
 export function AdminTheme() {
-  const themeContext = useContext(ThemeContext)
+  const themeContext = useThemeContext()
   const switchTheme = () => {
     themeContext.switch()
   }

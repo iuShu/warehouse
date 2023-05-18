@@ -1,10 +1,9 @@
 import './globals.css'
-import { Inter, Roboto, Source_Serif_Pro } from 'next/font/google'
+import { Inter, Roboto} from 'next/font/google'
 import {ThemeProvider} from "../providers/theme";
 
-const inter = Inter({ weight: '300', subsets: ['latin'] })
+const inter = Inter({ weight: '400', subsets: ['latin'] })
 const roboto = Roboto({ weight: '300', subsets: ['latin'] })
-const serif4 = Source_Serif_Pro({ weight: '300', subsets: ['latin'] })
 
 export const metadata = {
   title: 'Create Next App',

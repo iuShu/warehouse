@@ -1,9 +1,12 @@
 'use client';
 
-import {useRef, useState} from "react";
+import {useContext, useRef, useState} from "react";
+import {useModalContext} from "./modal";
 
 export function Table({ name, headers, rows, pages = null, pageCallback = null,
                         toolbar = true, styles = {} }) {
+  const modalContext = useModalContext()
+
   const [selectedRows, setSelectedRows] = useState(new Set())
   const rowRefs = useRef([])
   const onClickRow = (r) => {
@@ -44,6 +47,17 @@ export function Table({ name, headers, rows, pages = null, pageCallback = null,
   const toEdit = (e, row) => {
     e.stopPropagation()
     alert(row[0])
+  }
+
+  const onDelete = () => {
+    if (selectedRows.size < 1) {
+      alert('please select one')
+      return
+    }
+
+    modalContext.open('alert', '删除确认', '确认删除吗？',
+      () => console.log('confirm delete'),
+      () => console.log('cancel delete'))
   }
 
   const empty = pages.totalRow === 0
@@ -109,11 +123,12 @@ export function Table({ name, headers, rows, pages = null, pageCallback = null,
             <button className="h-8 px-2 rounded hover:bg-violet-100 active:bg-violet-200 tracking-widest transition duration-300">
               新增
             </button>
-            <button className="h-8 px-2 rounded hover:bg-violet-100 active:bg-violet-200 tracking-widest transition duration-300">
+            <button onClick={onDelete}
+                    className="h-8 px-2 rounded hover:bg-violet-100 active:bg-violet-200 tracking-widest transition duration-300">
               删除{selectedRows.size > 0 ? ("(" + selectedRows.size + ")") : ""}
             </button>
           </div>
-          <div className="basis-3/5 flex flex-row items-center justify-end font-semibold text-slate-500 dark:text-slate-300">
+          <div className="basis-3/5 flex flex-row items-center justify-end text-slate-500 dark:text-slate-300">
             <div className="font-semibold hidden">Page Size</div>
             <select className="w-18 px-2 py-1 cursor-pointer rounded font-semibold bg-zinc-100 hover:bg-zinc-200 hidden">
               <option value="10">10</option>

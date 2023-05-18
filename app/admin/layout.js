@@ -12,10 +12,11 @@ export default function AdminLayout({ children }) {
         </div>
         <div className="w-full min-h-screen max-h-screen px-2 py-2 overflow-y-auto flex flex-col gap-2">
           <Headbar />
-          { children }
+          <Modal>
+            { children }
+          </Modal>
         </div>
       </div>
-      <Modal />
     </>
   )
 }

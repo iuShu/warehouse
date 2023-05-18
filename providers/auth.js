@@ -1,6 +1,6 @@
 'use client';
 
-import {createContext, useCallback, useMemo, useState} from "react";
+import {createContext, useCallback, useContext, useMemo, useState} from "react";
 
 export const AuthContext = createContext({});
 
@@ -23,4 +23,8 @@ export function AuthProvider({ children }) {
       <AuthContext.Provider value={authValue}>{children}</AuthContext.Provider>
     </>
   )
+}
+
+export function useAuthContext() {
+  return useContext(AuthContext)
 }

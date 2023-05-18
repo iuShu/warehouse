@@ -1,6 +1,6 @@
 'use client';
 
-import {createContext, useEffect, useState} from "react";
+import {createContext, useContext, useEffect, useState} from "react";
 import {getLocalSetting, setLocalSetting} from "../components/settings";
 
 export const ThemeContext = createContext({}); // blank and dark
@@ -32,4 +32,8 @@ export function ThemeProvider({ children }) {
       </ThemeContext.Provider>
     </>
   )
+}
+
+export function useThemeContext() {
+  return useContext(ThemeContext)
 }

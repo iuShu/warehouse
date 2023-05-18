@@ -1,5 +1,4 @@
 import {UserTable} from "../../../components/user-table";
-import {Modal} from "../../../components/modal";
 
 export default function Authority() {
   return (

@@ -1,6 +1,6 @@
 import {Sidebar} from "../../components/sidebar";
 import {Headbar} from "../../components/headbar";
-import {Modal} from "../../components/modal";
+import {ModalProvider} from "../../providers/modal";
 
 export default function AdminLayout({ children }) {
 
@@ -12,9 +12,9 @@ export default function AdminLayout({ children }) {
         </div>
         <div className="w-full min-h-screen max-h-screen px-2 py-2 overflow-y-auto flex flex-col gap-2">
           <Headbar />
-          <Modal>
+          <ModalProvider>
             { children }
-          </Modal>
+          </ModalProvider>
         </div>
       </div>
     </>

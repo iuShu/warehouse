@@ -25,7 +25,9 @@ export function Headbar() {
         </div>
         <div className="basis-1/2 flex flex-row-reverse gap-2 px-4">
           <div className="px-2 py-2 flex flex-row gap-4 items-center text-zinc-800 cursor-pointer group hover:text-violet-700 dark:text-slate-300 hover:dark:text-indigo-400">
-            <span className="group-hover:scale-110 transition-all duration-300">管理员</span>
+            <span className="group-hover:scale-110 transition-all duration-300">
+              welfare3399
+            </span>
           </div>
           <div className="flex items-center">
             <button className="px-2 py-2 rounded-full hover:bg-zinc-200 hover:dark:bg-zinc-700 transition duration-300">

@@ -64,6 +64,7 @@ export function ModalProvider({ children }) {
   return (
     <>
       <ModalContext.Provider value={config}>
+        { children }
         <div className={"relative " + (mask ? "z-10" : "-z-10")}>
           {/*
             Background backdrop, show/hide based on modal state.
@@ -75,9 +76,7 @@ export function ModalProvider({ children }) {
               From: "opacity-100"
               To: "opacity-0"
           */}
-          <div className={"fixed inset-0 bg-gray-500/50 transition-opacity ease-in-out duration-300 opacity-0 "
-             + (modal ? "opacity-100" : "")}
-          />
+          <div className={"fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity ease-in-out opacity-0 " + (modal ? "opacity-100" : "")}/>
 
           <div className="fixed inset-0 z-10 overflow-y-auto">
             <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
@@ -126,7 +125,6 @@ export function ModalProvider({ children }) {
             </div>
           </div>
         </div>
-        { children }
       </ModalContext.Provider>
     </>
   )

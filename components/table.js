@@ -2,10 +2,12 @@
 
 import {useRef, useState} from "react";
 import {useModalContext} from "../providers/modal";
+import {useNotificationContext} from "../providers/notification";
 
-export function Table({ name, headers, rows, pages = null, pageCallback = null,
-                        toolbar = true, styles = {} }) {
+export function Table({ name, headers, rows, pages = null, pageCallback = null, editCallback = null,
+                        toolbar = true, styles = {}}) {
   const modalContext = useModalContext()
+  const notificationContext = useNotificationContext();
   const [selectedRows, setSelectedRows] = useState(new Set())
   const rowRefs = useRef([])
   const onClickRow = (r) => {
@@ -27,7 +29,10 @@ export function Table({ name, headers, rows, pages = null, pageCallback = null,
   }
 
   const [selectAll, setSelectAll] = useState(false)
-  const onSelectAll = () => {
+  const onSelectAll = (e) => {
+    if (e.target.tagName === 'DIV')
+      e.target.querySelector('button').click()
+
     if (selectAll) {  // cancel
       rows.map((row, r) => {
         if (selectedRows.has(row[0]))
@@ -43,9 +48,13 @@ export function Table({ name, headers, rows, pages = null, pageCallback = null,
     setSelectAll(!selectAll)
   }
 
-  const toEdit = (e, row) => {
+  const toEdit = (e, r, row) => {
     e.stopPropagation()
-    alert(row[0])
+    editCallback(r, row)
+  }
+
+  const onCreate = () => {
+    notificationContext.notify('删除成功！')
   }
 
   const onDelete = () => {
@@ -78,7 +87,7 @@ export function Table({ name, headers, rows, pages = null, pageCallback = null,
             <tr className="border-b dark:border-zinc-600">
               <th key={name + "-select-all"}
                   className="w-12 pt-3 pb-2 text-center">
-                <div onClick={onSelectAll} className={pages.totalRow < 1 ? "hidden" : ""}>
+                <div onClick={e => onSelectAll(e)} className={pages.totalRow < 1 ? "hidden" : ""}>
                   <Checkbox />
                 </div>
               </th>
@@ -106,7 +115,7 @@ export function Table({ name, headers, rows, pages = null, pageCallback = null,
                     )
                   })}
                   <td key={name + "-tr-op-" + rid} className="hidden group-hover:table-cell">
-                    <button onClick={(e) => toEdit(e, row)}
+                    <button onClick={(e) => toEdit(e, r, row)}
                             className="w-12 h-8 tracking-widest rounded text-violet-600 hover:bg-violet-100 transition duration-300">
                       编辑
                     </button>
@@ -127,7 +136,7 @@ export function Table({ name, headers, rows, pages = null, pageCallback = null,
         </div>
         <div className={"flex flex-row px-2 " + (toolbar ? "" : "hidden")}>
           <div className="basis-2/5 flex flex-row gap-1 text-violet-600 items-center">
-            <button className="h-8 px-2 rounded hover:bg-violet-100 active:bg-violet-200 tracking-widest transition duration-300">
+            <button onClick={onCreate} className="h-8 px-2 rounded hover:bg-violet-100 active:bg-violet-200 tracking-widest transition duration-300">
               新增
             </button>
             <button onClick={onDelete} disabled={selectedRows.size === 0}

@@ -1,6 +1,7 @@
 'use client';
 
 import {useThemeContext} from "../providers/theme";
+import Link from "next/link";
 
 export function Headbar() {
   const themeContext = useThemeContext()
@@ -24,11 +25,12 @@ export function Headbar() {
           </button>
         </div>
         <div className="basis-1/2 flex flex-row-reverse gap-2 px-4">
-          <div className="px-2 py-2 flex flex-row gap-4 items-center text-zinc-800 cursor-pointer group hover:text-violet-700 dark:text-slate-300 hover:dark:text-indigo-400">
+          <Link href={"/admin/profile"}
+                className="px-2 py-2 flex flex-row gap-4 items-center text-zinc-800 cursor-pointer group hover:text-violet-700 dark:text-slate-300 hover:dark:text-indigo-400">
             <span className="group-hover:scale-110 transition-all duration-300">
               welfare3399
             </span>
-          </div>
+          </Link>
           <div className="flex items-center">
             <button className="px-2 py-2 rounded-full hover:bg-zinc-200 hover:dark:bg-zinc-700 transition duration-300">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"

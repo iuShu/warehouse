@@ -1,4 +1,4 @@
-import {UserTable} from "../../../components/user-table";
+import {UserTable} from "../../../components/user/user-table";
 
 export default function Authority() {
   return (

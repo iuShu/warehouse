@@ -1,16 +1,17 @@
 'use client';
 
-import {createContext, useCallback, useContext, useMemo, useState} from "react";
+import {createContext, useCallback, useContext, useEffect, useMemo, useState} from "react";
+import {setLocalSetting} from "../components/settings";
 
-export const AuthContext = createContext({});
+const AuthContext = createContext({});
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState({});
 
-  const loginHandler = useCallback(res => {
-    res.json().then(data => {
-      setUser(data['user'])
-    })
+  const loginHandler = useCallback(user => {
+    console.log('> update user to', user)
+    setUser(user)
+    setLocalSetting('u', user)
   }, [])
 
   const authValue = useMemo(() => ({
@@ -18,9 +19,13 @@ export function AuthProvider({ children }) {
     loginHandler
   }), [user, loginHandler])
 
+  console.log('current', user)
+
   return (
     <>
-      <AuthContext.Provider value={authValue}>{children}</AuthContext.Provider>
+      <AuthContext.Provider value={authValue}>
+        {children}
+      </AuthContext.Provider>
     </>
   )
 }

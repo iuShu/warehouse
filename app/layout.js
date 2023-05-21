@@ -1,6 +1,7 @@
 import './globals.css'
 import { Inter, Roboto} from 'next/font/google'
 import {ThemeProvider} from "../providers/theme";
+import {AuthProvider} from "../providers/auth";
 
 const inter = Inter({ weight: '400', subsets: ['latin'] })
 const roboto = Roboto({ weight: '300', subsets: ['latin'] })
@@ -16,7 +17,9 @@ export default function RootLayout({ children }) {
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
       <body className={inter.className} suppressHydrationWarning={true}>
         <ThemeProvider>
-          {children}
+          <AuthProvider>
+            {children}
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

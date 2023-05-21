@@ -2,24 +2,31 @@
 
 import Link from "next/link";
 import {useRouter} from "next/navigation";
+import {useAuthContext} from "../../providers/auth";
 
 export function LoginSubmit() {
 
   const router = useRouter()
+  const authContext = useAuthContext()
 
   const submitLogin = () => {
     fetch('/auth/api', {
-      method: 'post',
+      method: 'POST',
+      cache: "no-cache",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify({
-        username: 'admin',
-        password: 'admin'
+        username: "admin",
+        password: "admin@pwd"
       })
     }).then(res => {
-      console.log('>', res.ok)
       if (!res.ok) {
         alert('auth failed')
         return
       }
+      res.json().then(data => authContext.loginHandler(data.user))
       router.push('/admin')
     }).catch(err => {
       console.error('auth error', err)

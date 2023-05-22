@@ -26,7 +26,10 @@ export function LoginSubmit() {
         alert('auth failed')
         return
       }
-      res.json().then(data => authContext.loginHandler(data.user))
+      res.json().then(data => {
+        data.user["loginAt"] = Date.now()
+        authContext.loginHandler(data.user)
+      })
       router.push('/admin')
     }).catch(err => {
       console.error('auth error', err)

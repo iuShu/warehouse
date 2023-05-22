@@ -2,30 +2,35 @@
 
 import {useEffect, useState} from "react";
 import {useAuthContext} from "../../providers/auth";
+import {useNotificationContext} from "../../providers/notification";
 
 export function Account() {
   const authContext = useAuthContext()
-  const [user, setUser] = useState(authContext.user || {username: '', password: '', email: ''})
+  const notificationContext = useNotificationContext()
   const [saving, setSaving] = useState(false)
+  const [data, setData] = useState({})
+
+  const onInput = (key, value) => {
+    const updated = {}
+    Object.assign(updated, authContext.user)
+    updated['username'] = authContext.user.username
+    updated[key] = value
+    setData(updated)
+  }
 
   const recover = () => {
-
+    document.querySelector('#password').value = authContext.user.password
+    document.querySelector('#email').value = authContext.user.email
   }
 
   const save = () => {
     setSaving(true)
 
     // validate and request info saving
-
-    const updated = {
-      user: {
-        username: user.username,
-        password: user.password,
-        email: user.email
-      }
-    }
-    authContext.loginHandler(updated)
+    console.log('save', data)
+    authContext.loginHandler(data)
     setSaving(false)
+    notificationContext.notify("保存成功！")
   }
 
   return (
@@ -35,19 +40,19 @@ export function Account() {
           <div className="w-full flex flex-col gap-2">
             <label htmlFor="username" className="block text-sm font-medium leading-6 pl-1 tracking-widest select-none">账号</label>
             <input id="username" type="text" name="username"
-                   value={user.username} disabled={true}
+                   value={authContext.user.username || ""} disabled={true}
                    className="h-10 rounded bg-zinc-100 dark:bg-zinc-700 pl-2 tracking-wider disabled:bg-gray-50"/>
           </div>
           <div className="w-full flex flex-col gap-2">
             <label htmlFor="password" className="block text-sm font-medium leading-6 pl-1 tracking-widest select-none">密码</label>
-            <input id="password" type="text" name="password"
-                   value={user.password} onChange={e => {}}
+            <input id="password" type="text" name="password" required={true}
+                   defaultValue={authContext.user.password || ""} onChange={e => onInput("password", e.target.value)}
                    className="h-10 rounded bg-zinc-100 dark:bg-zinc-700 pl-2 tracking-wider"/>
           </div>
           <div className="w-full flex flex-col gap-2">
             <label htmlFor="email" className="block text-sm font-medium leading-6 pl-1 tracking-widest select-none">邮箱</label>
-            <input id="email" type="email" name="email"
-                   value={user.email} onChange={e => {}}
+            <input id="email" type="email" name="email" required={true}
+                   defaultValue={authContext.user.email} onChange={e => onInput("email", e.target.value)}
                    className="h-10 rounded bg-zinc-100 dark:bg-zinc-700 pl-2 tracking-wider"/>
           </div>
           <div className="pt-4 flex flex-row gap-2 items-center justify-center">
@@ -72,9 +77,35 @@ export function Account() {
 
 export function Username() {
   const authContext = useAuthContext()
+  const calcDuration = (start) => {
+    if (!start)
+      return ""
+
+    const seconds = Math.round((Date.now() - start) / 1000)
+    const hours = Math.round(seconds / 3600)
+    const sec = Math.round(seconds % 3600 / 60)
+    if (seconds < 60)
+      return "-"
+    else if (sec === 0)
+      return hours + "小时"
+    else if (hours === 0)
+      return sec + "分钟"
+    else
+      return hours + "小时" + sec + "分钟"
+  }
+
   return (
     <>
-      {"AAA"}
+      <div className="h-full flex flex-row gap-4 items-center justify-center text-lg">
+        <div className="flex flex-col gap-2">
+          <p>当前账号</p>
+          <p>使用时长</p>
+        </div>
+        <div className="flex flex-col gap-2 font-semibold">
+          <p>{authContext.user.username || ""}</p>
+          <p>{calcDuration(authContext.user.loginAt) || ""}</p>
+        </div>
+      </div>
     </>
   )
 }

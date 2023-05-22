@@ -46,7 +46,7 @@ export function NotificationProvider({ children }) {
               From: "opacity-100 translate-y-0 sm:scale-100"
               To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           -->*/}
-            <div className={"relative transform overflow-hidden rounded-lg text-left shadow-xl transition-all sm:my-8 sm:min-w-[20%] sm:max-w-lg border border-slate-100 ease-in-out duration-300 opacity-0 translate-y-4 sm:translate-y-4 sm:scale-95 "
+            <div className={"relative transform overflow-hidden rounded-lg text-left shadow-lg transition-all sm:my-8 sm:min-w-[20%] sm:max-w-lg border border-slate-200 ease-in-out duration-300 opacity-0 translate-y-4 sm:translate-y-4 sm:scale-95 "
               + (notify ? "opacity-100 translate-y-0 sm:scale-100" : "")}
             >
               <div onClick={close} className="bg-white px-4 py-2 cursor-pointer">

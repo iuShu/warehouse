@@ -1,16 +1,39 @@
 'use client';
 
-import Link from "next/link";
 import {useRouter} from "next/navigation";
 import {useAuthContext} from "../../providers/auth";
+import {useNotificationContext} from "../../providers/notification";
+import {fetchData} from "../fetch";
 
 export function LoginSubmit() {
 
   const router = useRouter()
   const authContext = useAuthContext()
+  const notificationContext = useNotificationContext()
 
   const submitLogin = () => {
-    fetch('/auth/api', {
+    const username = document.querySelector('#username').value
+    const password = document.querySelector('#password').value
+    if (!username || !password) {
+      notificationContext.alert('请输入用户名和密码')
+      return
+    }
+
+    fetchData("/auth/pub/api").then(data => {
+      if (data.code !== 1) {
+        notificationContext.alert(data.msg || "请求密钥出现异常")
+        return
+      }
+      const body = {
+        username: username,
+        password: password
+      }
+      fetchData("/auth/api", "POST", body).then(data => {
+        console.log(data)
+      })
+    })
+
+    /*fetch('/auth/api', {
       method: 'POST',
       cache: "no-cache",
       credentials: "same-origin",
@@ -18,8 +41,8 @@ export function LoginSubmit() {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        username: "admin",
-        password: "admin@pwd"
+        username: username,
+        password: password
       })
     }).then(res => {
       if (!res.ok) {
@@ -33,15 +56,15 @@ export function LoginSubmit() {
       router.push('/admin')
     }).catch(err => {
       console.error('auth error', err)
-    })
+    })*/
   }
 
   return (
     <>
-      <Link href={""} onClick={submitLogin}
-            className="py-2 rounded tracking-widest transition duration-300 bg-blue-200 hover:bg-blue-300 dark:text-indigo-100 dark:bg-indigo-500 hover:dark:bg-indigo-600">
+      <button onClick={submitLogin}
+              className="py-2 rounded tracking-widest transition duration-300 bg-blue-200 hover:bg-blue-300 dark:text-indigo-100 dark:bg-indigo-500 hover:dark:bg-indigo-600">
         登录
-      </Link>
+      </button>
     </>
   )
 }

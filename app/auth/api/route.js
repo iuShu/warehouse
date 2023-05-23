@@ -2,6 +2,7 @@ import {NextResponse} from "next/server";
 
 export async function POST(req) {
   const body = await req.json()
+  console.log('post', body)
   const state = {
     status: 200,
     headers: {'content-type': 'application/json'}

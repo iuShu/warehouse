@@ -34,7 +34,7 @@ export function NotificationProvider({ children }) {
     <>
       <NotificationContext.Provider value={config}>
         { children }
-        <div className={"fixed bottom-0 z-10 overflow-y-auto " + (mask ? "" : "hidden")}>
+        <div className={"fixed bottom-0 right-2 z-10 overflow-y-auto " + (mask ? "" : "hidden")}>
           <div className="flex items-end justify-center p-4 text-center sm:items-end">
             {/*<!--
             Modal panel, show/hide based on modal state.

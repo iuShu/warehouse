@@ -20,7 +20,7 @@ export function Account() {
 
   const recover = () => {
     document.querySelector('#password').value = authContext.user.password
-    document.querySelector('#email').value = authContext.user.email
+    document.querySelector('#email').value = authContext.user.emailaddress
   }
 
   const save = () => {
@@ -52,7 +52,7 @@ export function Account() {
           <div className="w-full flex flex-col gap-2">
             <label htmlFor="email" className="block text-sm font-medium leading-6 pl-1 tracking-widest select-none">邮箱</label>
             <input id="email" type="email" name="email" required={true}
-                   defaultValue={authContext.user.email} onChange={e => onInput("email", e.target.value)}
+                   defaultValue={authContext.user.emailaddress} onChange={e => onInput("email", e.target.value)}
                    className="h-10 rounded bg-zinc-100 dark:bg-zinc-700 pl-2 tracking-wider"/>
           </div>
           <div className="pt-4 flex flex-row gap-2 items-center justify-center">
@@ -97,13 +97,17 @@ export function Username() {
   return (
     <>
       <div className="h-full flex flex-row gap-4 items-center justify-center text-lg">
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 select-none">
           <p>当前账号</p>
           <p>使用时长</p>
         </div>
         <div className="flex flex-col gap-2 font-semibold">
-          <p>{authContext.user.username || ""}</p>
-          <p>{calcDuration(authContext.user.loginAt) || ""}</p>
+          <p>
+            {authContext.user.username || ""}
+          </p>
+          <p title={"登录时间：" + new Date(authContext.user.loginAt).toLocaleString()}>
+            {calcDuration(authContext.user.loginAt) || ""}
+          </p>
         </div>
       </div>
     </>

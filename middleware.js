@@ -8,7 +8,7 @@ export function middleware(req) {
   const pathname = req.nextUrl.pathname
   const token = req.cookies.get(process.env.COOKIE_KEY)?.value
   console.log(process.env.COOKIE_KEY, token)
-  if (!token || token !== 'WH_FAKE_TOKEN_abc123') {
+  if (!token) {
     if (!pathname.startsWith('/auth')) {
       console.log('to auth')
       return NextResponse.redirect(new URL("/auth", req.url))

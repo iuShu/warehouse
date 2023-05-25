@@ -1,26 +1,28 @@
 "use client";
 
-import Link from "next/link";
 import {useRouter} from "next/navigation";
+import {fetchData} from "../fetch";
+import {useNotificationContext} from "../../providers/notification";
+import {setRtk} from "../settings";
+import {useAuthContext} from "../../providers/auth";
 
 export function Logout() {
 
   const router = useRouter()
+  const authContext = useAuthContext();
+  const notificationContext = useNotificationContext();
 
   const logout = () => {
-    fetch("/auth/api", {
-      method: "delete"
-    }).then(res => {
-      if (res.ok) {
-        res.json().then(data => {
-          if (data.success)
-            router.push("/auth")
-          else
-            alert("logout failed" + data.msg)
-        })
+    fetchData("/auth/api", "delete").then(data => {
+      if (data.code === 1) {
+        authContext.loginHandler({})
+        setRtk("")
+        notificationContext.notify("正在退出 ...")
+        router.push("/auth")
       }
-    }).catch(err => {
-      console.error("logout error", err)
+      else {
+        notificationContext.alert(data.msg || "退出异常")
+      }
     })
   }
 

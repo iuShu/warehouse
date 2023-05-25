@@ -49,7 +49,7 @@ export function NotificationProvider({ children }) {
             <div className={"relative transform overflow-hidden rounded-lg text-left shadow-lg transition-all sm:my-8 sm:min-w-[20%] sm:max-w-lg border border-slate-200 ease-in-out duration-300 opacity-0 translate-y-4 sm:translate-y-4 sm:scale-95 "
               + (notify ? "opacity-100 translate-y-0 sm:scale-100" : "")}
             >
-              <div onClick={close} className="bg-white px-4 py-2 cursor-pointer">
+              <div onClick={close} className="bg-white pl-4 pr-8 py-2 cursor-pointer">
                 <div className="flex items-center">
                   <div className={"mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full sm:mx-0 sm:h-10 sm:w-10 " + (type === "alert" ? "bg-red-100" : "bg-green-100")}>
                     <svg className={"h-6 w-6 text-red-600 " + (type === "alert" ? "" : "hidden")} fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true">

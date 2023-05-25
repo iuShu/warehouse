@@ -1,28 +1,22 @@
 import {NextResponse} from "next/server";
+import {fetchServer} from "../../../components/fetch";
 
 export async function POST(req) {
   const body = await req.json()
-  console.log('post', body)
+  const data = await fetchServer(process.env.Server + "/auth", "POST", body)
   const state = {
     status: 200,
     headers: {'content-type': 'application/json'}
   }
-  const result = {
-    success: true,
-    msg: '',
-    user: {
-      username: body['username'],
-      password: 'admin@pwd',
-      email: 'admin001@mail.com'
-    }
+  const res = new NextResponse(JSON.stringify(data), state)
+  if (data.code === 1) {
+    res.cookies.set({
+      name: process.env.COOKIE_KEY,
+      value: data.payload?.token,
+      path: "/",
+      maxAge: parseInt(process.env.COOKIE_MAX_AGE)
+    })
   }
-  const res = new NextResponse(JSON.stringify(result), state)
-  res.cookies.set({
-    name: process.env.COOKIE_KEY,
-    value: "WH_FAKE_TOKEN_abc123",
-    path: "/",
-    maxAge: parseInt(process.env.COOKIE_MAX_AGE)
-  })
   return res
 }
 
@@ -31,7 +25,7 @@ export async function DELETE(req) {
     status: 200,
     headers: {'content-type': 'application/json'}
   }
-  const res = new NextResponse(JSON.stringify({success: true, msg: ''}), state)
+  const res = new NextResponse(JSON.stringify({code: 1, msg: ''}), state)
   res.cookies.delete(process.env.COOKIE_KEY)
   return res
 }

@@ -10,7 +10,7 @@ export function AuthFloatbar() {
   }
   return (
     <>
-      <div title="支持" className="cursor-pointer absolute right-2 bottom-24 w-12 h-12 transition duration-700 rounded-full shadow-lg bg-white dark:bg-zinc-700">
+      <div title="支持" className="hidden cursor-pointer absolute right-2 bottom-24 w-12 h-12 transition duration-700 rounded-full shadow-lg bg-white dark:bg-zinc-700">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5"
              stroke="currentColor" className="w-6 h-6 ml-3 mt-3 text-zinc-800 dark:text-slate-400">
           <path strokeLinecap="round" strokeLinejoin="round"

@@ -15,7 +15,8 @@ export function ThemeProvider({ children }) {
   }
 
   useEffect(() => {
-    if (getLocalSetting("theme") !== theme)
+    const prefer = getLocalSetting("theme")
+    if (prefer && prefer !== theme)
       switchTheme()
   }, [])
 

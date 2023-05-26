@@ -15,14 +15,16 @@ function fetch0(action, method, body, cache, headers) {
     options.body = body
   }
 
-  console.log(action, method, options)
+  console.log(action, options.method, options)
 
   return fetch(action, options).then(res => {
     if (!res.ok)
       return {code: -1, msg: "请求数据失败"}
     return res.json()
   }).catch(err => {
-    console.error(method, action, 'error', err)
+    console.error(options.method, action, 'error\n', err)
+    if (err.cause.code === "ECONNREFUSED")
+      return {code: -1, msg: "服务器连接失败"}
     return {code: -1, msg: "请求数据异常"}
   })
 }

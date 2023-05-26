@@ -1,6 +1,7 @@
 import {LoginSubmit} from "../../components/action/login";
 import Image from "next/image";
 import Link from "next/link";
+import {Password} from "../../components/password";
 
 export default function Login() {
   return (
@@ -18,7 +19,7 @@ export default function Login() {
         </div>
         <div className="flex flex-col w-1/2 gap-2">
           <label htmlFor="username" className="block text-sm font-medium leading-6">用户名</label>
-          <input id="username" type="text" name="username" required={true} className="h-10 rounded font-normal bg-zinc-200 dark:bg-zinc-700 pl-4 tracking-wider"/>
+          <input id="username" type="text" name="username" required={true} className="h-10 rounded font-normal bg-zinc-200 dark:bg-zinc-700 pl-4 tracking-widest"/>
         </div>
         <div className="flex flex-col w-1/2 gap-2">
           <div className="flex flex-row">
@@ -27,7 +28,7 @@ export default function Login() {
               <Link href={"/auth/retrieve"} className="font-thin text-blue-400 hover:text-blue-500 dark:text-indigo-400 hover:dark:text-indigo-500">忘记密码？</Link>
             </div>
           </div>
-          <input id="password" type="password" name="password" required={true} className="h-10 rounded bg-zinc-200 dark:bg-zinc-700 pl-4 tracking-wider"/>
+          <Password />
         </div>
         <div className="flex flex-col w-1/2 mt-4 text-center">
           <LoginSubmit />

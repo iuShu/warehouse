@@ -5,7 +5,7 @@ import {useAuthContext} from "../../providers/auth";
 import {useNotificationContext} from "../../providers/notification";
 import {fetchData} from "../fetch";
 import forge from "node-forge";
-import {setLocalSetting, setRtk} from "../settings";
+import {setRtk} from "../settings";
 import {useState} from "react";
 
 export function LoginSubmit() {
@@ -55,7 +55,7 @@ export function LoginSubmit() {
         else {
           notificationContext.alert("登录请求异常")
         }
-        setOn(false)
+        setOn(data.code === 1)
       })
     })
   }

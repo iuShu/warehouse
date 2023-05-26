@@ -1,7 +1,7 @@
-function fetch0(action, method, body, cache, headers) {
+function fetch0(action, method, body, headers) {
   const options = {
     method: method || "GET",
-    cache: cache || "no-cache",
+    cache: "no-cache",
     headers: headers || {}
   }
 
@@ -30,16 +30,16 @@ function fetch0(action, method, body, cache, headers) {
 }
 
 // for page to fetch from nodejs server
-export function fetchData(action, method, body, cache, headers) {
+export function fetchData(action, method, body, headers) {
   if (method && method.toUpperCase() === "POST" && body && body instanceof Object) {
     body = JSON.stringify(body)
     headers = Object.assign({"content-type": "application/json;charset=UTF-8"}, headers || {})
   }
-  return fetch0(action, method, body, cache, headers)
+  return fetch0(action, method, body, headers)
 }
 
 // for nodejs server to fetch from back-end server
-export function fetchServer(action, method, body, cache, headers) {
+export function fetchServer(action, method, body, bearer, headers) {
   if (method && method.toUpperCase() === "POST" && body && body instanceof Object) {
     const params = []
     for (let k of Object.keys(body))
@@ -47,5 +47,7 @@ export function fetchServer(action, method, body, cache, headers) {
     body = params.join("&")
     headers = Object.assign({"content-type": "application/x-www-form-urlencoded;charset=UTF-8"}, headers || {})
   }
-  return fetch0(action, method, body, cache, headers)
+  if (bearer)
+    headers = Object.assign({"Authorization": "Bearer" + bearer}, headers)
+  return fetch0(action, method, body, headers)
 }

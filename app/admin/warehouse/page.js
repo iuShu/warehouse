@@ -1,7 +1,11 @@
+import {WarehouseTable} from "../../../components/warehouse/wh-table";
+
 export default function Warehouse() {
   return (
     <>
-      <div className="text-xl text-indigo-400">Warehouse</div>
+      <div className="h-screen flex flex-col overflow-y-auto bg-white dark:bg-zinc-700 rounded shadow-lg">
+        <WarehouseTable />
+      </div>
     </>
   )
 }

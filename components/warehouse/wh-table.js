@@ -1,22 +1,28 @@
 'use client';
 
 import {Table} from "../table";
-import {useEffect, useRef, useState} from "react";
 import {SlideOver} from "../slideover";
-import Link from "next/link";
+import {useEffect, useRef, useState} from "react";
+import {fetchData} from "../fetch";
 
 const pageSize = 10
 
-export function UserTable() {
-  const headers = ['账号', '密码', '邮箱']
+export function WarehouseTable() {
+  const headers = ['仓库名称', '所在城市', '详细地址', '虚拟仓']
   const [rowData, setRowData] = useState(Array)
   const [editRow, setEditRow] = useState(new Array(headers.length + 2).fill(''))
   const [pages, setPages] = useState({})
 
   useEffect(() => {
-    const {rows, page} = fetchPage(1, pageSize)
-    setPages(page)
-    setRowData(rows)
+    const page = {
+      pageNo: 1,
+      pageSize: pageSize
+    }
+    fetchData("/admin/warehouse/api", "post", page).then(data => {
+      const {list, page} = data.payload
+      setPages(page)
+      setRowData(list)
+    })
   }, [])
 
   const flip = (pageNo) => {
@@ -92,37 +98,14 @@ export function UserTable() {
 
 let fakeId = 1
 function fetchPage(pageNo, pageSize) {
-  const raw = [
-    ['account1', 'account1', 'user@password', 'user@mail.com'],
-    ['account2', 'account2', 'user@password', 'user@mail.com'],
-    ['account3', 'account3', 'user@password', 'user@mail.com'],
-    ['account4', 'account4', 'user@password', 'user@mail.com'],
-    ['account5', 'account5', 'user@password', 'user@mail.com'],
-    ['account6', 'account6', 'user@password', 'user@mail.com'],
-    ['account7', 'account7', 'user@password', 'user@mail.com'],
-    ['account8', 'account8', 'user@password', 'user@mail.com'],
-    ['account9', 'account9', 'user@password', 'user@mail.com'],
-    ['account10', 'account10', 'user@password', 'user@mail.com']
-  ]
-  raw.map((row, i) => {
-    row[0] = "account" + fakeId++
-    row[1] = row[0]
-  })
-  if (pageNo === 7) {
-    raw.pop()
-    raw.pop()
-    raw.pop()
-    raw.pop()
-    raw.pop()
-    raw.pop()
+  const raw = []
+  const page = {
+    pageNo: pageNo,
+    pageSize: pageSize
   }
+
   return {
     rows: raw,
-    page: {
-      pageNo: pageNo,
-      pageSize: pageSize,
-      totalPage: 7,
-      totalRow: 69
-    }
+    page: page
   }
 }

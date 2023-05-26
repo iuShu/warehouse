@@ -105,7 +105,7 @@ export function Table({ name, headers, rows, pages = null, pageCallback = null, 
               const rid = row[0]
               return (
                 <tr key={name + "-tr-" + rid} id={rid} ref={rf => rowRefs.current[r] = rf} onClick={() => onClickRow(r)}
-                    className="border-b dark:border-zinc-600 cursor-pointer hover:bg-gray-50 hover:dark:bg-zinc-600 group">
+                    className="border-b cursor-pointer group last:border-0 hover:bg-gray-50 hover:dark:bg-zinc-600 dark:border-zinc-600 ">
                   {row.map((col, i) => {
                     return (
                       <td key={name + "-td-" + i}
@@ -134,7 +134,7 @@ export function Table({ name, headers, rows, pages = null, pageCallback = null, 
             </div>
           </div>
         </div>
-        <div className={"flex flex-row px-2 " + (toolbar ? "" : "hidden")}>
+        <div className={"flex flex-row px-2 -mt-1 border-t " + (toolbar ? "" : "hidden")}>
           <div className="basis-2/5 flex flex-row gap-1 text-violet-600 items-center">
             <button onClick={onCreate} className="h-8 px-2 rounded hover:bg-violet-100 active:bg-violet-200 tracking-widest transition duration-300">
               新增

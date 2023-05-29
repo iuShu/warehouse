@@ -54,16 +54,16 @@ export function Account() {
           <div className="w-full flex flex-col gap-2">
             <label htmlFor="username" className="block text-sm font-medium leading-6 pl-1 tracking-widest select-none">账号</label>
             <input id="username" type="text" name="username"
-                   value={authContext.user.username || ""} disabled={true}
+                   value={authContext.user?.username || ""} disabled={true}
                    className="h-10 rounded bg-zinc-100 dark:bg-zinc-700 pl-2 tracking-wider disabled:bg-gray-50"/>
           </div>
           <div className="relative w-full flex flex-col gap-2">
             <label htmlFor="password" className="block text-sm font-medium leading-6 pl-1 tracking-widest select-none">密码</label>
             <input id="passwordText" type="text" required={true}
-                   defaultValue={authContext.user.password || ""} onChange={e => onInput("password", e.target.value)}
+                   defaultValue={authContext.user?.password || ""} onChange={e => onInput("password", e.target.value)}
                    className={"h-10 rounded bg-zinc-100 dark:bg-zinc-700 pl-2 tracking-wider " + (showPwd ? "" : "hidden")}/>
             <input id="password" type="password" name="password" required={true}
-                   defaultValue={authContext.user.password || ""} onChange={e => onInput("password", e.target.value)}
+                   defaultValue={authContext.user?.password || ""} onChange={e => onInput("password", e.target.value)}
                    className={"h-10 rounded bg-zinc-100 dark:bg-zinc-700 pl-2 tracking-wider " + (showPwd ? "hidden" : "")}/>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"
                  onClick={switchShow}
@@ -80,7 +80,7 @@ export function Account() {
           <div className="w-full flex flex-col gap-2">
             <label htmlFor="email" className="block text-sm font-medium leading-6 pl-1 tracking-widest select-none">邮箱</label>
             <input id="email" type="email" name="email" required={true}
-                   defaultValue={authContext.user.emailaddress} onChange={e => onInput("email", e.target.value)}
+                   defaultValue={authContext.user?.emailaddress} onChange={e => onInput("email", e.target.value)}
                    className="h-10 rounded bg-zinc-100 dark:bg-zinc-700 pl-2 tracking-wider"/>
           </div>
           <div className="pt-4 flex flex-row gap-2 items-center justify-center">
@@ -131,10 +131,10 @@ export function Username() {
         </div>
         <div className="flex flex-col gap-2 font-semibold">
           <p>
-            {authContext.user.username || ""}
+            {authContext.user?.username || ""}
           </p>
-          <p title={"登录时间：" + new Date(authContext.user.loginAt).toLocaleString()}>
-            {calcDuration(authContext.user.loginAt) || ""}
+          <p title={"登录时间：" + new Date(authContext.user?.loginAt).toLocaleString()}>
+            {calcDuration(authContext.user?.loginAt) || ""}
           </p>
         </div>
       </div>

@@ -3,10 +3,9 @@
 import {useRouter} from "next/navigation";
 import {useAuthContext} from "../../providers/auth";
 import {useNotificationContext} from "../../providers/notification";
-import {fetchData} from "../fetch";
 import forge from "node-forge";
-import {setRtk} from "../settings";
 import {useState} from "react";
+import {getData, postData} from "../fetch";
 
 export function LoginSubmit() {
 
@@ -24,7 +23,7 @@ export function LoginSubmit() {
     }
 
     setOn(true)
-    fetchData("/auth/pub/api").then(data => {
+    getData("/auth/pub/api").then(data => {
       if (data.code !== 1) {
         notificationContext.alert(data.msg || "请求密钥出现异常")
         setOn(false)
@@ -36,13 +35,12 @@ export function LoginSubmit() {
         username: encodeURIComponent(forge.util.encode64(pubKey.encrypt(username))),
         password: encodeURIComponent(forge.util.encode64(pubKey.encrypt(password)))
       }
-      fetchData("/auth/api", "POST", body).then(data => {
+      postData("/auth/api", body).then(data => {
         if (data.code === 1) {
           const user = data.payload.user
           user["loginAt"] = Date.now()
           user["password"] = password
           authContext.loginHandler(user)
-          setRtk(data.payload.refreshToken)
           notificationContext.notify("登录成功，正在进入 ...")
           router.push("/admin")
         }

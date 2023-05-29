@@ -1,10 +1,9 @@
 "use client";
 
 import {useRouter} from "next/navigation";
-import {fetchData} from "../fetch";
 import {useNotificationContext} from "../../providers/notification";
-import {setRtk} from "../settings";
 import {useAuthContext} from "../../providers/auth";
+import {deleteData} from "../fetch";
 
 export function Logout() {
 
@@ -13,10 +12,9 @@ export function Logout() {
   const notificationContext = useNotificationContext();
 
   const logout = () => {
-    fetchData("/auth/api", "delete").then(data => {
+    deleteData("/auth/api", "delete").then(data => {
       if (data.code === 1) {
         authContext.loginHandler({})
-        setRtk("")
         notificationContext.notify("正在退出 ...")
         router.push("/auth")
       }

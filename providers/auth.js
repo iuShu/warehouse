@@ -1,7 +1,7 @@
 'use client';
 
 import {createContext, useCallback, useContext, useEffect, useMemo, useState} from "react";
-import {getLocalSetting, setLocalSetting} from "../components/settings";
+import {localUser, saveUser} from "../components/settings";
 
 const AuthContext = createContext({});
 
@@ -10,7 +10,7 @@ export function AuthProvider({ children }) {
 
   const loginHandler = useCallback(user => {
     setUser(user)
-    setLocalSetting('u', user)
+    saveUser(user)
   }, [])
 
   const authValue = useMemo(() => ({
@@ -19,7 +19,7 @@ export function AuthProvider({ children }) {
   }), [user, loginHandler])
 
   useEffect(() => {
-    setTimeout(() => setUser(getLocalSetting('u')), 100)
+    setTimeout(() => setUser(localUser()), 100)
   }, [])
 
   return (

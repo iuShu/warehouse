@@ -18,10 +18,10 @@ export function setLocalSetting(key, val) {
   localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(settings))
 }
 
-export function setRtk(val) {
-  setLocalSetting("rtk", val)
+export function saveUser(val) {
+  setLocalSetting("u", val)
 }
 
-export function getRtk() {
-  return getLocalSetting("rtk")
+export function localUser() {
+  return getLocalSetting("u")
 }

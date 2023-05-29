@@ -12,9 +12,9 @@ export async function POST(req) {
   if (data.code === 1) {
     res.cookies.set({
       name: process.env.COOKIE_KEY,
-      value: data.payload?.token,
+      value: data.payload.token,
       path: "/",
-      maxAge: parseInt(process.env.COOKIE_MAX_AGE)
+      maxAge: 7200
     })
   }
   return res

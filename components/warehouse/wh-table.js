@@ -3,22 +3,30 @@
 import {Table} from "../table";
 import {SlideOver} from "../slideover";
 import {useEffect, useRef, useState} from "react";
-import {fetchData} from "../fetch";
+import {postAuth} from "../fetch";
+import {useNotificationContext} from "../../providers/notification";
+import {useAuthContext} from "../../providers/auth";
 
 const pageSize = 10
 
 export function WarehouseTable() {
-  const headers = ['仓库名称', '所在城市', '详细地址', '虚拟仓']
   const [rowData, setRowData] = useState(Array)
-  const [editRow, setEditRow] = useState(new Array(headers.length + 2).fill(''))
+  const [editRow, setEditRow] = useState({})
   const [pages, setPages] = useState({})
+  const notificationContext = useNotificationContext()
+  const authContext = useAuthContext()
 
   useEffect(() => {
     const page = {
       pageNo: 1,
       pageSize: pageSize
     }
-    fetchData("/admin/warehouse/api", "post", page).then(data => {
+    postAuth("/admin/warehouse/api", page, authContext.loginHandler).then(data => {
+      if (data.code !== 1) {
+        notificationContext.alert(data.msg || "请求数据异常")
+        return
+      }
+
       const {list, page} = data.payload
       setPages(page)
       setRowData(list)
@@ -30,14 +38,21 @@ export function WarehouseTable() {
       return
     const p = Object.assign({}, pages)
     p.pageNo = pageNo
-    const {rows, page} = fetchPage(p.pageNo, p.pageSize)
-    setPages(page)
-    setRowData(rows)
+    postAuth("/admin/warehouse/api", p).then(data => {
+      if (data.code !== 1) {
+        notificationContext.alert(data.msg || "请求数据异常")
+        return
+      }
+
+      const {list, page} = data.payload
+      setPages(page)
+      setRowData(list)
+    })
   }
 
   const slideRef = useRef(null)
-  const edit = (r, row) => {
-    setEditRow([...row, r])
+  const edit = row => {
+    setEditRow(row)
     slideRef.current?.slideIn()
   }
 
@@ -50,15 +65,17 @@ export function WarehouseTable() {
     // request edit saving
 
     const updated = [...rowData]
-    updated[editRow[editRow.length - 1]] = [editRow[0], ...data]
+    const row = Object.assign({}, editRow)
+    delete row.index
+    updated[editRow.index] = row
     setRowData(updated)
 
     slideRef.current?.slideOut()
   }
 
-  const onInput = (i, val) => {
-    const row = [...editRow]
-    row[i] = val
+  const onInput = (key, val) => {
+    const row = Object.assign({}, editRow)
+    row[key] = val
     setEditRow(row)
   }
 
@@ -67,33 +84,51 @@ export function WarehouseTable() {
     height: `h-[444px]`
   }
 
+  const headers = [{
+    title: 'id',
+    field: 'warehouseId'
+  },{
+    title: '仓库名称',
+    field: 'name'
+  }, {
+    title: '所在城市',
+    field: 'country'
+  }, {
+    title: '详细地址',
+    field: 'address'
+  }, {
+    title: '虚拟仓',
+    field: 'isVirtual',
+    format: val => parseInt(val) === 1 ? "是" : ""
+  }]
+
   return (
     <>
-      <Table name="user" headers={headers} rows={rowData} pages={pages} pageCallback={flip} editCallback={edit} styles={styles} />
-      <SlideOver title={"用户编辑"} save={saveEdit} ref={slideRef}>
+      <Table name="warehouse" headers={headers} rows={rowData} pages={pages} pageCallback={flip} editCallback={edit} styles={styles} />
+      <SlideOver title={"仓库编辑"} save={saveEdit} ref={slideRef}>
         <div className="flex flex-col gap-4 px-4 py-4 items-start justify-start">
-          <div className="w-full flex flex-col gap-2">
-            <label htmlFor="username" className="block text-sm font-medium leading-6 pl-1 tracking-widest select-none">{headers[0]}</label>
-            <input id="username" type="text" name="username" required={true}
-                   value={editRow[1]} disabled={true}
-                   className="h-10 rounded bg-zinc-100 dark:bg-zinc-700 pl-2 tracking-wider disabled:bg-gray-50"/>
-          </div>
-          <div className="w-full flex flex-col gap-2">
-            <label htmlFor="password" className="block text-sm font-medium leading-6 pl-1 tracking-widest select-none">{headers[1]}</label>
-            <input id="password" type="text" name="password" required={true}
-                   value={editRow[2]} onChange={e => onInput(2, e.target.value)}
-                   className="h-10 rounded bg-zinc-100 dark:bg-zinc-700 pl-2 tracking-wider"/>
-          </div>
-          <div className="w-full flex flex-col gap-2">
-            <label htmlFor="email" className="block text-sm font-medium leading-6 pl-1 tracking-widest select-none">{headers[2]}</label>
-            <input id="email" type="email" name="email" required={true}
-                   value={editRow[3]} onChange={e => onInput(3, e.target.value)}
-                   className="h-10 rounded bg-zinc-100 dark:bg-zinc-700 pl-2 tracking-wider"/>
-          </div>
+          {headers.filter(each => each.title !== "id").map(each => (
+            <div key={"slo-" + each.field} className="w-full flex flex-col gap-2">
+              <label htmlFor="username" className="block text-sm font-medium leading-6 pl-1 tracking-widest select-none">{each.title}</label>
+              <input id="username" type="text" name="username" required={true}
+                     value={editRow[each.field] || ""} disabled={each.editable || false} onChange={e => onInput(each.field, e.target.value)}
+                     className="h-10 rounded bg-zinc-100 dark:bg-zinc-700 pl-2 tracking-wider disabled:bg-gray-50"/>
+            </div>
+          ))}
         </div>
       </SlideOver>
     </>
   )
+}
+
+const formatRow = (list) => {
+  if (!list || list.length < 1)
+    return list
+
+  const rowData = []
+  for (let each of list)
+    rowData.push([each.warehouseId, each.name, each.country, each.address, each.isVirtual])
+  return rowData
 }
 
 let fakeId = 1

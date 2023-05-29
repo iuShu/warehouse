@@ -8,9 +8,8 @@ import Link from "next/link";
 const pageSize = 10
 
 export function UserTable() {
-  const headers = ['账号', '密码', '邮箱']
   const [rowData, setRowData] = useState(Array)
-  const [editRow, setEditRow] = useState(new Array(headers.length + 2).fill(''))
+  const [editRow, setEditRow] = useState({})
   const [pages, setPages] = useState({})
 
   useEffect(() => {
@@ -30,8 +29,8 @@ export function UserTable() {
   }
 
   const slideRef = useRef(null)
-  const edit = (r, row) => {
-    setEditRow([...row, r])
+  const edit = row => {
+    setEditRow(row)
     slideRef.current?.slideIn()
   }
 
@@ -44,15 +43,17 @@ export function UserTable() {
     // request edit saving
 
     const updated = [...rowData]
-    updated[editRow[editRow.length - 1]] = [editRow[0], ...data]
+    const row = Object.assign({}, editRow)
+    delete row.index
+    updated[editRow.index] = row
     setRowData(updated)
 
     slideRef.current?.slideOut()
   }
 
-  const onInput = (i, val) => {
-    const row = [...editRow]
-    row[i] = val
+  const onInput = (key, val) => {
+    const row = Object.assign({}, editRow)
+    row[key] = val
     setEditRow(row)
   }
 
@@ -61,29 +62,34 @@ export function UserTable() {
     height: `h-[444px]`
   }
 
+  const headers = [{
+    title: 'id',
+    field: 'username'
+  },{
+    title: '账号',
+    field: 'username',
+    immutable: true
+  }, {
+    title: '密码',
+    field: 'password'
+  }, {
+    title: '邮箱',
+    field: 'emailaddress'
+  }]
+
   return (
     <>
       <Table name="user" headers={headers} rows={rowData} pages={pages} pageCallback={flip} editCallback={edit} styles={styles} />
       <SlideOver title={"用户编辑"} save={saveEdit} ref={slideRef}>
         <div className="flex flex-col gap-4 px-4 py-4 items-start justify-start">
-          <div className="w-full flex flex-col gap-2">
-            <label htmlFor="username" className="block text-sm font-medium leading-6 pl-1 tracking-widest select-none">{headers[0]}</label>
-            <input id="username" type="text" name="username" required={true}
-                   value={editRow[1]} disabled={true}
-                   className="h-10 rounded bg-zinc-100 dark:bg-zinc-700 pl-2 tracking-wider disabled:bg-gray-50"/>
-          </div>
-          <div className="w-full flex flex-col gap-2">
-            <label htmlFor="password" className="block text-sm font-medium leading-6 pl-1 tracking-widest select-none">{headers[1]}</label>
-            <input id="password" type="text" name="password" required={true}
-                   value={editRow[2]} onChange={e => onInput(2, e.target.value)}
-                   className="h-10 rounded bg-zinc-100 dark:bg-zinc-700 pl-2 tracking-wider"/>
-          </div>
-          <div className="w-full flex flex-col gap-2">
-            <label htmlFor="email" className="block text-sm font-medium leading-6 pl-1 tracking-widest select-none">{headers[2]}</label>
-            <input id="email" type="email" name="email" required={true}
-                   value={editRow[3]} onChange={e => onInput(3, e.target.value)}
-                   className="h-10 rounded bg-zinc-100 dark:bg-zinc-700 pl-2 tracking-wider"/>
-          </div>
+          {headers.filter(each => each.title !== "id").map(each => (
+            <div key={"slo-" + each.field} className="w-full flex flex-col gap-2">
+              <label htmlFor="username" className="block text-sm font-medium leading-6 pl-1 tracking-widest select-none">{each.title}</label>
+              <input id="username" type="text" name="username" required={true}
+                     value={editRow[each.field] || ""} disabled={each.immutable || false} onChange={e => onInput(each.field, e.target.value)}
+                     className="h-10 rounded bg-zinc-100 dark:bg-zinc-700 pl-2 tracking-wider disabled:bg-gray-50"/>
+            </div>
+          ))}
         </div>
       </SlideOver>
     </>
@@ -93,20 +99,19 @@ export function UserTable() {
 let fakeId = 1
 function fetchPage(pageNo, pageSize) {
   const raw = [
-    ['account1', 'account1', 'user@password', 'user@mail.com'],
-    ['account2', 'account2', 'user@password', 'user@mail.com'],
-    ['account3', 'account3', 'user@password', 'user@mail.com'],
-    ['account4', 'account4', 'user@password', 'user@mail.com'],
-    ['account5', 'account5', 'user@password', 'user@mail.com'],
-    ['account6', 'account6', 'user@password', 'user@mail.com'],
-    ['account7', 'account7', 'user@password', 'user@mail.com'],
-    ['account8', 'account8', 'user@password', 'user@mail.com'],
-    ['account9', 'account9', 'user@password', 'user@mail.com'],
-    ['account10', 'account10', 'user@password', 'user@mail.com']
+      {username: 'account1', password: 'user@password', emailaddress: 'user@mail.com'},
+      {username: 'account2', password: 'user@password', emailaddress: 'user@mail.com'},
+      {username: 'account3', password: 'user@password', emailaddress: 'user@mail.com'},
+      {username: 'account4', password: 'user@password', emailaddress: 'user@mail.com'},
+      {username: 'account5', password: 'user@password', emailaddress: 'user@mail.com'},
+      {username: 'account6', password: 'user@password', emailaddress: 'user@mail.com'},
+      {username: 'account7', password: 'user@password', emailaddress: 'user@mail.com'},
+      {username: 'account8', password: 'user@password', emailaddress: 'user@mail.com'},
+      {username: 'account9', password: 'user@password', emailaddress: 'user@mail.com'},
+      {username: 'account10', password: 'user@password', emailaddress: 'user@mail.com'},
   ]
   raw.map((row, i) => {
-    row[0] = "account" + fakeId++
-    row[1] = row[0]
+    row.username = "account" + fakeId++
   })
   if (pageNo === 7) {
     raw.pop()

@@ -10,15 +10,16 @@ export function Table({ name, headers, rows, pages = null, pageCallback = null, 
   const notificationContext = useNotificationContext();
   const [selectedRows, setSelectedRows] = useState(new Set())
   const rowRefs = useRef([])
+  const idKey = findIdKey(headers)
   const onClickRow = (r) => {
     const ele = rowRefs.current[r]
     const checkbox = ele.querySelector('button')
     if (!checkbox.classList.contains('active')) {
-      selectedRows.add(rows[r][0])
+      selectedRows.add(rows[r][idKey])
       ele.classList.add('bg-gray-50')
     }
     else {
-      selectedRows.delete(rows[r][0])
+      selectedRows.delete(rows[r][idKey])
       ele.classList.remove('bg-gray-50')
     }
 
@@ -35,13 +36,13 @@ export function Table({ name, headers, rows, pages = null, pageCallback = null, 
 
     if (selectAll) {  // cancel
       rows.map((row, r) => {
-        if (selectedRows.has(row[0]))
+        if (selectedRows.has(row[idKey]))
           onClickRow(r)
       })
     }
     else {  // select
       rows.map((row, r) => {
-        if (!selectedRows.has(row[0]))
+        if (!selectedRows.has(row[idKey]))
           onClickRow(r)
       })
     }
@@ -50,7 +51,8 @@ export function Table({ name, headers, rows, pages = null, pageCallback = null, 
 
   const toEdit = (e, r, row) => {
     e.stopPropagation()
-    editCallback(r, row)
+    row.index = r
+    editCallback(row)
   }
 
   const onCreate = () => {
@@ -87,14 +89,14 @@ export function Table({ name, headers, rows, pages = null, pageCallback = null, 
             <tr className="border-b dark:border-zinc-600">
               <th key={name + "-select-all"}
                   className="w-12 pt-3 pb-2 text-center">
-                <div onClick={e => onSelectAll(e)} className={pages.totalRow < 1 ? "hidden" : ""}>
+                <div onClick={e => onSelectAll(e)} className={"cursor-pointer " + (pages.totalRow < 1 ? "hidden" : "")}>
                   <Checkbox />
                 </div>
               </th>
-              {headers.map((each, i) => {
+              {headers.filter(each => each.title !== "id").map((each, i) => {
                 return (
                   <th key={name + "-th-" + i} className="px-2 pt-3 pb-2">
-                    {each}
+                    {each.title}
                   </th>
                 )
               })}
@@ -102,20 +104,24 @@ export function Table({ name, headers, rows, pages = null, pageCallback = null, 
             </thead>
             <tbody className="text-left text-slate-600 dark:text-slate-300">
             {rows.map((row, r) => {
-              const rid = row[0]
+              const rid = row[idKey]
               return (
                 <tr key={name + "-tr-" + rid} id={rid} ref={rf => rowRefs.current[r] = rf} onClick={() => onClickRow(r)}
                     className="border-b cursor-pointer group last:border-0 hover:bg-gray-50 hover:dark:bg-zinc-600 dark:border-zinc-600 ">
-                  {row.map((col, i) => {
+                  {headers.map((each, i) => {
+                    let val = each.title === "id" ? "" : row[each.field]
+                    val = each.hasOwnProperty("format") ? each.format(val) : val
+                    if (each.hasOwnProperty("format"))
+                      console.log(row[each.field], each.format(row[each.field]), val)
                     return (
                       <td key={name + "-td-" + i}
-                          className={"px-2 py-2 truncate " + (i === 0 ? "text-center " : "") + (i === row.length - 1 ? "group-hover:hidden" : "")}>
-                        {i === 0 ? <Checkbox /> : col}
+                          className={"px-2 py-2 truncate " + (each.title === "id" ? "text-center " : "") + (i === headers.length - 1 ? "group-hover:hidden" : "")}>
+                        {each.title === "id" ? <Checkbox /> : val}
                       </td>
                     )
                   })}
                   <td key={name + "-tr-op-" + rid} className="hidden group-hover:table-cell">
-                    <button onClick={(e) => toEdit(e, r, row)}
+                    <button onClick={e => toEdit(e, r, row)}
                             className="w-12 h-8 tracking-widest rounded text-violet-600 hover:bg-violet-100 transition duration-300">
                       编辑
                     </button>
@@ -201,4 +207,13 @@ function Checkbox() {
       </button>
     </>
   )
+}
+
+const findIdKey = (headers) => {
+  let key = ""
+  headers.map(each => {
+    if (each.title === "id")
+      key = each.field
+  })
+  return key
 }

@@ -15,13 +15,13 @@ export function middleware(req) {
     }
   }
   else if (pathname === '/' || pathname === '/auth' || is_login_req(req)) {
-    console.log('to admin')
+    console.log('to admin', pathname)
     return NextResponse.redirect(new URL("/admin", req.url))
   }
 }
 
 export const config = {
-  matcher: ["/", "/auth/:path*", "/admin/:path*"]
+  matcher: ["/", "/auth", "/admin/:path*"]
 }
 
 const is_login_req = (req) => {

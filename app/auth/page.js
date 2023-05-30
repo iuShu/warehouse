@@ -19,7 +19,7 @@ export default function Login() {
         </div>
         <div className="flex flex-col w-1/2 gap-2">
           <label htmlFor="username" className="block text-sm font-medium leading-6">用户名</label>
-          <input id="username" type="text" name="username" required={true} className="h-10 rounded font-normal bg-zinc-200 dark:bg-zinc-700 pl-4 tracking-widest"/>
+          <input id="username" type="text" name="username" required={true} className="h-10 rounded font-normal bg-zinc-100 dark:bg-zinc-700 pl-4 tracking-widest"/>
         </div>
         <div className="flex flex-col w-1/2 gap-2">
           <div className="flex flex-row">

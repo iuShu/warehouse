@@ -111,8 +111,6 @@ export function Table({ name, headers, rows, pages = null, pageCallback = null, 
                   {headers.map((each, i) => {
                     let val = each.title === "id" ? "" : row[each.field]
                     val = each.hasOwnProperty("format") ? each.format(val) : val
-                    if (each.hasOwnProperty("format"))
-                      console.log(row[each.field], each.format(row[each.field]), val)
                     return (
                       <td key={name + "-td-" + i}
                           className={"px-2 py-2 truncate " + (each.title === "id" ? "text-center " : "") + (i === headers.length - 1 ? "group-hover:hidden" : "")}>

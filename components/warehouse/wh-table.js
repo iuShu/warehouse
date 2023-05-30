@@ -6,6 +6,7 @@ import {useEffect, useRef, useState} from "react";
 import {postAuth} from "../fetch";
 import {useNotificationContext} from "../../providers/notification";
 import {useAuthContext} from "../../providers/auth";
+import {Toggle} from "../toggle";
 
 const pageSize = 10
 
@@ -52,17 +53,24 @@ export function WarehouseTable() {
 
   const slideRef = useRef(null)
   const edit = row => {
+    console.log(row)
     setEditRow(row)
     slideRef.current?.slideIn()
   }
 
   const saveEdit = () => {
-    const panel = slideRef.current?.panel(), data = []
+    const panel = slideRef.current?.panel(), body = []
     panel.querySelectorAll('input').forEach((ele, i) => {
-      data.push(ele.value)
+      const pair = {}
+      pair[ele.name] = ele.value
+      body.push(pair)
     })
 
     // request edit saving
+    // postAuth("/admin/warehouse/api", body).then(data => {
+    //
+    // })
+    console.log('> save', body)
 
     const updated = [...rowData]
     const row = Object.assign({}, editRow)
@@ -99,7 +107,8 @@ export function WarehouseTable() {
   }, {
     title: '虚拟仓',
     field: 'isVirtual',
-    format: val => parseInt(val) === 1 ? "是" : ""
+    ele: "toggle",
+    format: val => val === "1" ? "是" : ""
   }]
 
   return (
@@ -107,14 +116,26 @@ export function WarehouseTable() {
       <Table name="warehouse" headers={headers} rows={rowData} pages={pages} pageCallback={flip} editCallback={edit} styles={styles} />
       <SlideOver title={"仓库编辑"} save={saveEdit} ref={slideRef}>
         <div className="flex flex-col gap-4 px-4 py-4 items-start justify-start">
-          {headers.filter(each => each.title !== "id").map(each => (
-            <div key={"slo-" + each.field} className="w-full flex flex-col gap-2">
-              <label htmlFor="username" className="block text-sm font-medium leading-6 pl-1 tracking-widest select-none">{each.title}</label>
-              <input id="username" type="text" name="username" required={true}
-                     value={editRow[each.field] || ""} disabled={each.editable || false} onChange={e => onInput(each.field, e.target.value)}
-                     className="h-10 rounded bg-zinc-100 dark:bg-zinc-700 pl-2 tracking-wider disabled:bg-gray-50"/>
-            </div>
-          ))}
+          {headers.map(each => {
+            if (each.hasOwnProperty("ele") && each.ele === "toggle") {
+                return <div key={"slo-" + each.field} className="w-full flex flex-row gap-2">
+                  <label htmlFor={each.field} className="basis-1/2 block text-sm font-medium leading-6 pl-1 tracking-widest select-none">{each.title}</label>
+                  <Toggle name={each.field} value={editRow.hasOwnProperty(each.field) ? editRow[each.field] === "1" : false} />
+                </div>
+            }
+            else if (each.title === "id") {
+              return <input type="hidden" name={each.field} value={editRow[each.field]} />
+            }
+            else {
+              return <div key={"slo-" + each.field} className="w-full flex flex-col gap-2">
+                <label htmlFor={each.field} className="block text-sm font-medium leading-6 pl-1 tracking-widest select-none">{each.title}</label>
+                <input type="text" id={each.field} name={each.field} required={true}
+                       value={editRow[each.field] || ""} disabled={each.hasOwnProperty("editable") && each.editable}
+                       onChange={e => onInput(each.field, e.target.value)}
+                       className="h-10 rounded bg-zinc-100 dark:bg-zinc-700 pl-2 tracking-wider disabled:bg-gray-50"/>
+              </div>
+            }
+          })}
         </div>
       </SlideOver>
     </>

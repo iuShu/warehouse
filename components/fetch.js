@@ -1,5 +1,4 @@
 import {localUser} from "./settings";
-import {useAuthContext} from "../providers/auth";
 import forge from "node-forge";
 
 function fetch0(action, method, body, headers) {
@@ -54,11 +53,7 @@ export function deleteData(action, body, headers) {
   return fetchData(action, "delete", body, headers)
 }
 
-function fetchAuth(action, method, body, auth, headers) {
-  if (method && method.toUpperCase() === "POST" && body && body instanceof Object) {
-    body = JSON.stringify(body)
-    headers = Object.assign({"content-type": "application/json;charset=UTF-8"}, headers || {})
-  }
+function _fetchAuth(action, method, body, auth, headers) {
   return fetch0(action, method, body, headers).then(data => {
     if (!data || data.code !== -2)
       return data
@@ -69,11 +64,11 @@ function fetchAuth(action, method, body, auth, headers) {
 
       const pubKey = forge.pki.publicKeyFromPem(`-----BEGIN PUBLIC KEY-----\n${data.payload}\n-----END PUBLIC KEY-----`)
       const user = localUser()
-      const body = {
+      const info = {
         username: encodeURIComponent(forge.util.encode64(pubKey.encrypt(user.username))),
         password: encodeURIComponent(forge.util.encode64(pubKey.encrypt(user.password)))
       }
-      return postData("/auth/api", body).then(data => {
+      return postData("/auth/api", info).then(data => {
         if (!data || data.code !== 1)
           return data
 
@@ -85,6 +80,14 @@ function fetchAuth(action, method, body, auth, headers) {
       })
     })
   })
+}
+
+function fetchAuth(action, method, body, auth, headers) {
+  if (method && method.toUpperCase() === "POST" && body && body instanceof Object) {
+    body = JSON.stringify(body)
+    headers = Object.assign({"content-type": "application/json;charset=UTF-8"}, headers || {})
+  }
+  return _fetchAuth(action, method, body, auth, headers)
 }
 
 export function getAuth(action, body, auth, headers) {

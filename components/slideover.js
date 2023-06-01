@@ -1,6 +1,7 @@
 'use client';
 
 import {useState, forwardRef, useImperativeHandle, useRef} from "react";
+import {Toggle} from "./toggle";
 
 export const SlideOver = forwardRef(function SlideOver(props, ref) {
   const [slide, setSlide] = useState(false)
@@ -35,6 +36,7 @@ export const SlideOver = forwardRef(function SlideOver(props, ref) {
     props.save()
   }
 
+  const fields = props.fields, editRow = props.editRow, onInput = props.onInput
   return (
     <>
       <div className={"relative " + (mask ? "z-10" : "-z-10")}>
@@ -93,7 +95,30 @@ export const SlideOver = forwardRef(function SlideOver(props, ref) {
                     </h2>
                   </div>
                   <div className="relative" ref={panelRef}>
-                    { props.children }
+                    {/*{ props.children }*/}
+                    <div className="flex flex-col gap-4 px-4 py-4 items-start justify-start">
+                      {fields.map(each => {
+                        if (each.hasOwnProperty("ele") && each.ele === "toggle") {
+                          return <div key={"slo-" + each.field} className="w-full flex flex-row gap-2">
+                            <label htmlFor={each.field} className="basis-1/2 block text-sm font-medium leading-6 pl-1 tracking-widest select-none">{each.title}</label>
+                            <Toggle value={editRow.hasOwnProperty(each.field) ? editRow[each.field] === "1" : false}
+                                    setValue={val => onInput(each.field, val ? "1" : "0")} />
+                          </div>
+                        }
+                        else if (each.title === "id") {
+                          return <input type="hidden" key={each.field} name={each.field} value={editRow.hasOwnProperty(each.field) ? editRow[each.field] : ""} />
+                        }
+                        else {
+                          return <div key={"slo-" + each.field} className="w-full flex flex-col gap-2">
+                            <label htmlFor={each.field} className="block text-sm font-medium leading-6 pl-1 tracking-widest select-none">{each.title}</label>
+                            <input type="text" id={each.field} name={each.field} required={true}
+                                   value={editRow[each.field] || ""} disabled={each.hasOwnProperty("editable") && each.editable}
+                                   onChange={e => onInput(each.field, e.target.value)}
+                                   className="h-10 rounded bg-zinc-100 dark:bg-zinc-700 pl-2 tracking-wider disabled:bg-gray-50"/>
+                          </div>
+                        }
+                      })}
+                    </div>
                   </div>
                   <div className="px-4 pt-4 border-t border-slate-200 flex flex-row gap-2 items-center justify-center">
                     <button onClick={close}

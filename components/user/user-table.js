@@ -3,7 +3,6 @@
 import {Table} from "../table";
 import {useEffect, useRef, useState} from "react";
 import {SlideOver} from "../slideover";
-import Link from "next/link";
 
 const pageSize = 10
 
@@ -80,18 +79,7 @@ export function UserTable() {
   return (
     <>
       <Table name="user" headers={headers} rows={rowData} pages={pages} pageCallback={flip} editCallback={edit} styles={styles} />
-      <SlideOver title={"用户编辑"} save={saveEdit} ref={slideRef}>
-        <div className="flex flex-col gap-4 px-4 py-4 items-start justify-start">
-          {headers.filter(each => each.title !== "id").map(each => (
-            <div key={"slo-" + each.field} className="w-full flex flex-col gap-2">
-              <label htmlFor="username" className="block text-sm font-medium leading-6 pl-1 tracking-widest select-none">{each.title}</label>
-              <input id="username" type="text" name="username" required={true}
-                     value={editRow[each.field] || ""} disabled={each.immutable || false} onChange={e => onInput(each.field, e.target.value)}
-                     className="h-10 rounded bg-zinc-100 dark:bg-zinc-700 pl-2 tracking-wider disabled:bg-gray-50"/>
-            </div>
-          ))}
-        </div>
-      </SlideOver>
+      <SlideOver title={"用户编辑"} save={saveEdit} ref={slideRef} fields={headers} editRow={editRow} onInput={onInput} />
     </>
   )
 }

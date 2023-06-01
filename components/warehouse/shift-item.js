@@ -9,7 +9,7 @@ import {useAuthContext} from "../../providers/auth";
 
 const pageSize = 10
 
-export function WarehouseTable() {
+export function ShiftItemTable() {
   const [rowData, setRowData] = useState(Array)
   const [editRow, setEditRow] = useState({})
   const [pages, setPages] = useState({})
@@ -17,7 +17,7 @@ export function WarehouseTable() {
   const authContext = useAuthContext()
 
   const loadData = body => {
-    getAuth("/admin/warehouse/api", body, authContext.loginHandler).then(data => {
+    getAuth("/admin/warehouse/shift/item/api", body, authContext.loginHandler).then(data => {
       if (data.code !== 1) {
         notificationContext.alert(data.msg || "请求数据异常")
         return
@@ -53,7 +53,7 @@ export function WarehouseTable() {
   const saveEdit = () => {
     const body = Object.assign({}, editRow)
     delete body.index
-    postAuth("/admin/warehouse/api", body, authContext.loginHandler).then(data => {
+    postAuth("/admin/warehouse/shift/item/api", body, authContext.loginHandler).then(data => {
       if (data.code !== 1) {
         notificationContext.alert(data.msg || "编辑保存失败")
         return
@@ -84,25 +84,23 @@ export function WarehouseTable() {
     title: 'id',
     field: 'warehouseId'
   },{
-    title: '仓库名称',
-    field: 'name'
+    title: '产品',
+    field: 'productId'
   }, {
-    title: '所在城市',
-    field: 'country'
+    title: '数量',
+    field: 'quantity'
   }, {
-    title: '详细地址',
-    field: 'address'
+    title: '损耗',
+    field: 'splitshippingCost'
   }, {
-    title: '虚拟仓',
-    field: 'isVirtual',
-    ele: "toggle",
-    format: val => val === "1" ? "是" : ""
+    title: '备注',
+    field: 'notes',
   }]
 
   return (
     <>
       <Table name="warehouse" headers={headers} rows={rowData} pages={pages} pageCallback={flip} editCallback={edit} styles={styles} />
-      <SlideOver title={"仓库编辑"} save={saveEdit} ref={slideRef} fields={headers} editRow={editRow} onInput={onInput} />
+      <SlideOver title={"产品移仓编辑"} save={saveEdit} ref={slideRef} fields={headers} editRow={editRow} onInput={onInput} />
     </>
   )
 }
